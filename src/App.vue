@@ -72,7 +72,7 @@ export default {
 
     next() {
       
-      if (this.index === 9){
+      if (this.index === 10){
         //Reset index back to zero and reload next set of 10 questions.
         this.resetGame = 0;
       }

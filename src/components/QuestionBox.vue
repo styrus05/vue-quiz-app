@@ -1,6 +1,6 @@
 <template>
     <div class="question-box-container">
-        <b-jumbotron v-if="index!=9">
+        <b-jumbotron v-if="index!=10">
             
             <template slot="lead">
             {{currentQuestion.question}}
@@ -27,12 +27,12 @@
              <b-list-group-item> Did not answer: {{ counters.toAnswer }} </b-list-group-item>
             </b-list-group-->   
             
-            <b-button @click="nextButton" variant="outline-success" v-bind:disabled="index==9">Skip</b-button>
+            <b-button @click="nextButton" variant="outline-success" v-bind:disabled="index==10">Skip</b-button>
             <!--b-button @click="backButton" variant="outline-warning" v-bind:disabled="disableBack == 1" >Back</b-button-->
 
             <!--b-button @click="nextButton" variant="warning" v-bind:disabled="disableNext == 1" >Next</b-button-->
-            <b-button @click="submittedAnswer" variant="outline-primary" v-if="index!=9" v-bind:disabled="disableSubmit == 1">Submit</b-button>
-            <b-button @click="replayGame" variant="danger" v-if="index==9">Reset Score and Play Again</b-button>
+            <b-button @click="submittedAnswer" variant="outline-primary" v-if="index!=10" v-bind:disabled="disableSubmit == 1">Submit</b-button>
+            <b-button @click="replayGame" variant="danger" v-if="index==10">Reset Score and Play Again</b-button>
             
             <b-alert
                 variant="danger"
@@ -47,12 +47,12 @@
 
         </b-jumbotron>
         
-        <b-jumbotron header="" lead="Your final score card is" v-if="index==9">
+        <b-jumbotron header="" lead="Your final score card is" v-if="index==10">
             <p>Correct: {{counters.correctAnswers}}</p>
             <p>Wrong: {{counters.incorrectAnswers}}</p>
             <p>Did not answer: {{ counters.toAnswer }}</p>
 
-            <b-button @click="replayGame" variant="danger" v-if="index==9">Reset Score and Play Again</b-button>
+            <b-button @click="replayGame" variant="danger">Reset Score and Play Again</b-button>
         </b-jumbotron>
 
     </div> 
@@ -137,6 +137,8 @@ export default {
             
             var self = this;
             this.disableSubmit = 1;
+            
+            //Correct answer selected by user
             if(this.currentQuestion.correct_answer === this.answers[this.nowSelectedIndex])
             {
                 this.message="That was correct. Well done!";

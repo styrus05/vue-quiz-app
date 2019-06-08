@@ -16,9 +16,14 @@ export default {
     },
     computed:{
         counter(){
-            let counter = this.index + 1;
+            
+            let counter = this.index; 
+            if(counter!=10) {
+                //Add one in index because index starts from 0    
+                counter = counter + 1; }
             return counter;
         }
     }
 }
 </script> 
+ 
