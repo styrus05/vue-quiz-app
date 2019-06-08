@@ -1,6 +1,6 @@
 <template>
     <div class="question-box-container">
-        <b-jumbotron>
+        <b-jumbotron v-if="index!=9">
             
             <template slot="lead">
             {{currentQuestion.question}}
@@ -8,7 +8,7 @@
 
             <hr class="my-4">
 
-            <b-list-group v-if="index!=9">
+            <b-list-group >
                 <b-list-group-item
                 v-for="(answer, index) in answers" 
                 :key="index"
@@ -20,12 +20,12 @@
                 </b-list-group-item>
             </b-list-group>
             
-            <b-list-group v-if="index==9">
+            <!--b-list-group v-if="index==9">
              <b-list-group-item> Your final scores are:</b-list-group-item>
              <b-list-group-item> Correct: {{counters.correctAnswers}}</b-list-group-item>
              <b-list-group-item> Wrong: {{counters.incorrectAnswers}}</b-list-group-item>
              <b-list-group-item> Did not answer: {{ counters.toAnswer }} </b-list-group-item>
-            </b-list-group>   
+            </b-list-group-->   
             
             <b-button @click="nextButton" variant="outline-success" v-bind:disabled="index==9">Skip</b-button>
             <!--b-button @click="backButton" variant="outline-warning" v-bind:disabled="disableBack == 1" >Back</b-button-->
@@ -45,6 +45,14 @@
             </b-alert> 
             <Footer :correctAnswers="correctAnswers"/>
 
+        </b-jumbotron>
+        
+        <b-jumbotron header="" lead="Your final score card is" v-if="index==9">
+            <p>Correct: {{counters.correctAnswers}}</p>
+            <p>Wrong: {{counters.incorrectAnswers}}</p>
+            <p>Did not answer: {{ counters.toAnswer }}</p>
+
+            <b-button @click="replayGame" variant="danger" v-if="index==9">Reset Score and Play Again</b-button>
         </b-jumbotron>
 
     </div> 
