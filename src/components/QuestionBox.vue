@@ -127,7 +127,7 @@ export default {
             }
             else 
             {
-                this.message="Sorry that was wrong! Correct answer is: " + this.currentQuestion.correct_answer;
+                this.message="Incorrect answer selected! Correct answer is: " + this.currentQuestion.correct_answer;
                 this.disableSubmit = 0;
                 this.disableNext = 0; 
                 if(this.firstAttempt){
