@@ -1,7 +1,7 @@
 This is a quiz app in Vue.js
 
 How to run the application
-- using docker 
+# using docker command
 docker run -it -p 8080:8080 --rm --name docker-quiz-vue-app styrus05/quiz-app-in-vue:latest
 
 
