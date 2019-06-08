@@ -8,7 +8,7 @@
 
             <hr class="my-4">
 
-            <b-list-group >
+            <b-list-group v-if="index!=9">
                 <b-list-group-item
                 v-for="(answer, index) in answers" 
                 :key="index"
@@ -19,9 +19,20 @@
 
                 </b-list-group-item>
             </b-list-group>
-            <b-button @click="nextButton" variant="success" >Skip</b-button>
-            <b-button @click="nextButton" variant="warning" v-bind:disabled="disableNext == 1" >Next</b-button>
-            <b-button @click="submittedAnswer" variant="primary" v-bind:disabled="disableSubmit == 1">Submit</b-button>
+            
+            <b-list-group v-if="index==9">
+             <b-list-group-item> Your final scores are:</b-list-group-item>
+             <b-list-group-item> Correct: {{counters.correctAnswers}}</b-list-group-item>
+             <b-list-group-item> Wrong: {{counters.incorrectAnswers}}</b-list-group-item>
+             <b-list-group-item> Did not answer: {{ counters.toAnswer }} </b-list-group-item>
+            </b-list-group>   
+            
+            <b-button @click="nextButton" variant="outline-success" v-bind:disabled="index==9">Skip</b-button>
+            <!--b-button @click="backButton" variant="outline-warning" v-bind:disabled="disableBack == 1" >Back</b-button-->
+
+            <!--b-button @click="nextButton" variant="warning" v-bind:disabled="disableNext == 1" >Next</b-button-->
+            <b-button @click="submittedAnswer" variant="outline-primary" v-if="index!=9" v-bind:disabled="disableSubmit == 1">Submit</b-button>
+            <b-button @click="replayGame" variant="danger" v-if="index==9">Reset Score and Play Again</b-button>
             
             <b-alert
                 variant="danger"
@@ -46,17 +57,19 @@ export default {
     props: {
         currentQuestion: Object,
         next: Function, 
+        index: Number
     },
     data(){
         return {
             nowSelectedIndex: null,
             showDismissibleAlert:false,
             message:null,
-            disableSubmit:0,
+            disableSubmit:1,
             disableNext:0,
             counters: {
                 correctAnswers:0,
-                incorrectAnswers:0
+                incorrectAnswers:0,
+                toAnswer:0
             },
             firstAttempt:true
             //answers: [] 
@@ -89,16 +102,24 @@ export default {
              this.$emit('scoreUpdated', this.counters);
              console.log('Emitted event: scoreUpdated');
         },
+
+        replayGame () {
+            this.$emit('replayGame');
+        },
+
         selectedAnswer(index){
             this.nowSelectedIndex = index;
+            this.disableSubmit = 0;
+
         },
 
         nextButton(){
             this.nowSelectedIndex =null;
-            this.disableSubmit = 0;
+            this.disableSubmit = 1;
             this.disableNext = 1;
             this.showDismissibleAlert=false;
             this.firstAttempt=true;
+            this.counters.toAnswer = 10 - (this.counters.correctAnswers + this.counters.incorrectAnswers)
             this.next();
         },
 
@@ -107,7 +128,7 @@ export default {
             //console.log(this.answers[this.nowSelectedIndex]);
             
             var self = this;
-            
+            this.disableSubmit = 1;
             if(this.currentQuestion.correct_answer === this.answers[this.nowSelectedIndex])
             {
                 this.message="That was correct. Well done!";

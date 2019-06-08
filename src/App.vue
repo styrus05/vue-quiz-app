@@ -10,14 +10,25 @@
             :currentQuestion="questions[index]"
             :next="next"
             v-on:scoreUpdated="updateCounters"
+            v-on:replayGame="playAgain"
+            :index="index"
           /> 
         </b-col>
       </b-row>
+
+
       <b-row>
         <b-col sm="6" offset="3">
         <Footer :index="index" :correctCount="counters.correctCount" :incorrectCount="counters.incorrectCount" />
         </b-col>
       </b-row>  
+
+      <b-row>
+        <b-col sm="6" offset="3">
+            <b-button @click="playAgain" variant="warning" >Reset Quiz</b-button>
+        </b-col>
+      </b-row>  
+
     </b-container>
     
   </div>
@@ -43,6 +54,7 @@ export default {
     return {
       questions: [], 
       index: 0,
+      resetGame:1,
       counters: {
           correctCount:0,
           incorrectCount:0
@@ -57,17 +69,24 @@ export default {
       this.counters.correctCount = updatedCount.correctAnswers;
       this.counters.incorrectCount = updatedCount.incorrectAnswers;
     },
+
     next() {
-      this.index++;
-      if (this.index === 10){
+      
+      if (this.index === 9){
         //Reset index back to zero and reload next set of 10 questions.
-        this.index = 0;
-        this.questions = [];
-        this.loadNextSetOfQuestions();
+        this.resetGame = 0;
       }
+      else{
+        this.index++;
+      }
+      
     },
 
-    loadNextSetOfQuestions(){
+    playAgain() {
+        this.index = 0;
+        this.questions = [];
+        //this.playAgain = 1;
+        this.resetGame = 1;
           fetch('https://opentdb.com/api.php?amount=10&category=21&difficulty=easy&type=multiple',{
           method:'get'
           })
@@ -75,13 +94,16 @@ export default {
               return response.json()
           }) 
           .then((jsonData) => {
-            this.questions = jsonData.results
+            this.questions = jsonData.results;
+            this.counters.correctCount = 0;
+            this.counters.incorrectCount = 0;
           })
-
+          //Disable resetGame button
+          
     }
   },
   mounted: function() {
-    this.loadNextSetOfQuestions();
+    this.playAgain();
 
   }
 }
